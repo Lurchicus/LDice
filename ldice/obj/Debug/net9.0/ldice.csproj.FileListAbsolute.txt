@@ -1,0 +1,14 @@
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.GeneratedMSBuildEditorConfig.editorconfig
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.AssemblyInfoInputs.cache
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.AssemblyInfo.cs
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.csproj.CoreCompileInputs.cache
+/home/danr/Work/CSharp/LDice/ldice/bin/Debug/net9.0/ldice
+/home/danr/Work/CSharp/LDice/ldice/bin/Debug/net9.0/ldice.deps.json
+/home/danr/Work/CSharp/LDice/ldice/bin/Debug/net9.0/ldice.runtimeconfig.json
+/home/danr/Work/CSharp/LDice/ldice/bin/Debug/net9.0/ldice.dll
+/home/danr/Work/CSharp/LDice/ldice/bin/Debug/net9.0/ldice.pdb
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.dll
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/refint/ldice.dll
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.pdb
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ldice.genruntimeconfig.cache
+/home/danr/Work/CSharp/LDice/ldice/obj/Debug/net9.0/ref/ldice.dll
