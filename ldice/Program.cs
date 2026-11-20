@@ -22,15 +22,16 @@ namespace LDice
 
         public static int Main(string[] args)
         {
+            string? Inp = null;
             if (args.Length > 0)
             {
                 Inp = args[0];
             }
-            int RetVal = Process(string? Inp);
+            int RetVal = Process(Inp);
             if (RetVal == 0) {
                 return RetVal;
             }
-            
+            return 0;
         }
 
         private static int Process(string? Request)
@@ -161,7 +162,7 @@ namespace LDice
                         else
                         {
                             //More to do here, default to one die
-                            diceCount = 1;
+                            NumberOfDice = 1;
                             arrg = arrg.Substring(1, arrg.Length - 1);
                         }
                     }
@@ -173,17 +174,17 @@ namespace LDice
                         sside = ary[0];
                         try
                         {
-                            diceCount = Convert.ToInt32(sside);
+                            NumberOfDice = Convert.ToInt32(sside);
                         }
                         catch
                         {
-                            diceCount = 1;
+                            NumberOfDice = 1;
                         }
                         if (ary.Length == 1)
                         {
-                            // Only die count, default to 6 sides die with no adjustment
-                            sideCount = 6;
-                            adjust = 0;
+                            // Only die count, default to 6 sides die with no Adjustmentment
+                            NumberOfSides = 6;
+                            Adjustment = 0;
                             break;
                         }
                         else
@@ -197,52 +198,52 @@ namespace LDice
                     if (ary2.Length == 1)
                     {
                         //We only got a single result which should be the number of sides
-                        //on the die with no adjustment
+                        //on the die with no Adjustmentment
                         try
                         {
-                            sideCount = Convert.ToInt32(ary2[0]);
+                            NumberOfSides = Convert.ToInt32(ary2[0]);
                         }
                         catch
                         {
-                            sideCount = 6;
+                            NumberOfSides = 6;
                         }
-                        adjust = 0;
+                        Adjustment = 0;
                     }
                     else
                     {
-                        //More than a single result, should have die side count and adjustment
+                        //More than a single result, should have die side count and Adjustmentment
                         if (ary2.Length > 1)
                         {
                             try
                             {
-                                sideCount = Convert.ToInt32(ary2[0]);
+                                NumberOfSides = Convert.ToInt32(ary2[0]);
                             }
                             catch
                             {
-                                sideCount = 6;
+                                NumberOfSides = 6;
                             }
                             try
                             {
-                                adjust = Convert.ToInt32(ary2[1]);
+                                Adjustment = Convert.ToInt32(ary2[1]);
                             }
                             catch
                             {
-                                adjust = 0;
+                                Adjustment = 0;
                             }
-                            if (adjust > 0)
+                            if (Adjustment > 0)
                             {
                                 if (arrg.Contains("-"))
                                 {
-                                    //if the delimiter was a "-", negate the adjustment
-                                    adjust = 0 - adjust;
+                                    //if the delimiter was a "-", negate the Adjustmentment
+                                    Adjustment = 0 - Adjustment;
                                 }
                             }
                         }
                         if (ary2.Length <= 0)
                         {
-                            //Nothing to see here, default six sided die and no adjustment
-                            sideCount = 6;
-                            adjust = 0;
+                            //Nothing to see here, default six sided die and no Adjustmentment
+                            NumberOfSides = 6;
+                            Adjustment = 0;
                         }
                     }
                     break;
@@ -266,6 +267,130 @@ namespace LDice
             }
         }
 
+        /// <summary>
+        /// Set the global Quit flag
+        /// </summary>
+        public static void ParseQuit()
+        {
+            Wl("Goodbye...");
+            Quit = true;
+        }
+
+        /// <summary>
+        /// Set dice for a no argument default of 1d6+0
+        /// </summary>
+        public static void ParseNoArgument()
+        {
+            //No argument so default 1d6+0
+            if (NumberOfDice == 0) { NumberOfDice = 1; }
+            if (NumberOfSides == 0) { NumberOfSides = 6; }
+            if (Adjustment == 0) { Adjustment = 0; }
+        }
+
+        /// <summary>
+        /// Set a default of 1d6+0
+        /// </summary>
+        public static void ParseDefault()
+        {
+            //Only a "D" so default 1d6+0
+            NumberOfDice = 1;
+            NumberOfSides = 6;
+            Adjustment = 0;
+        }
+
+        /// <summary>
+        /// Will display a paginated file to the Console. If a path
+        /// is not supplied, the same path where the program resides
+        /// is used
+        /// </summary>
+        /// <param name="File">File to display</param>
+        /// <param name="Path">Path the file resides in (optional)</param>
+        public static void ShowFile(String FileName, String PathName = null)
+        {
+            Int32 ScreenHeight = Console.WindowHeight;
+            Int32 ScreenWidth = Console.WindowWidth;
+            Int32 Row = 0;
+            String? Inp = "";
+            String AppPath = "";
+
+            AppPath = SetPath(FileName, PathName);
+            try
+            {
+                using (StreamReader sr = new StreamReader(AppPath))
+                {
+                    string? line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        Wl(line);
+                        if (line.Length > ScreenWidth - 1)
+                        {
+                            Row = Row + (Int32)(line.Length / ScreenWidth - 1);
+                        }
+                        else
+                        {
+                            Row++;
+                        }
+                        if (Row >= ScreenHeight - 1)
+                        {
+                            Row = 0;
+                            W("Press Enter to continue (enter q to quit):");
+                            Inp = R();
+                            if (Inp == "q" || Inp == "Q")
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Wl("Could not read the text in file " + FileName + ".");
+                Wl(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Make sure we have a properly formed path. If initial path is empty,
+        /// set it to the application location.
+        /// </summary>
+        /// <param name="FileName">Name of file to show</param>
+        /// <param name="PathName">Path where file is located</param>
+        /// <returns>Fully formed path with filename</returns>
+        public static string SetPath(String? FileName, String? PathName = null)
+        {
+            String Nam = "";
+            String AppPath = "";
+
+            if (PathName == null)
+            {
+                AppPath = Assembly.GetExecutingAssembly().Location;
+                Nam = Path.GetFileName(AppPath);
+                AppPath = AppPath.Substring(0, AppPath.Length - Nam.Length);
+                if (FileName != null)
+                {
+                    if (FileName.Substring(0, 2) != "\\")
+                    {
+                        AppPath += "\\" + FileName;
+                    }
+                    else
+                    {
+                        AppPath += FileName;
+                    }
+            }
+            else
+            {
+                if (FileName.Substring(0, 2) != "\\")
+                {
+                    AppPath += PathName + "\\" + FileName;
+                }
+                else
+                {
+                    AppPath = PathName + FileName;
+                }
+            }
+            return AppPath;
+        }
 
         /// <summary>
         /// wrapper function for Console.WriteLine()
